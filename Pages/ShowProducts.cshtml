@@ -1,0 +1,161 @@
+﻿@page
+@model ProductsAppRP.Pages.ShowProductsModel
+@{
+}
+
+<!-- Displays products, links to edit and detail pages,
+    includes asp handlers to trigger appropriate OnPost
+    methods in-page, and a Bootstrap-based modal popup
+    for confirming deletion of a product.-->
+
+<p>
+    <a asp-page="AddProduct">Add New Product</a>
+</p>
+<form method="post" id="frmshowproducts">
+    <table class="table">
+        <tr>
+            <td>
+                Category <br />
+                <select asp-for="CategoryIdSelected" asp-items="Model.CatList"></select>
+            </td>
+            <td>
+                <table class="table">
+                    <tr>
+                        <th> ProductId</th>
+                        <th>ProductName</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>StockLevel</th>
+                        <th>OnSale</th>
+                        <th>Discontinued</th>
+                        <th></th>
+                        <th>Discount</th>
+                        <th>Increase Price</th>
+                        <th>Delete</th>
+                    </tr>
+                    @foreach (var item in Model.PList)
+                    {
+                        <tr>
+                            <td> @item.ProductId</td>
+                            <td> @item.ProductName</td>
+                            <td> @item.Description</td>
+                            <td> @String.Format("{0:c}",item.Price)</td>
+                            <td> @item.StockLevel</td>
+                            <td> @item.OnSale</td>
+                            <td> @item.Discontinued</td>
+                            <td>
+                                <a asp-page="EditProduct" asp-route-prodid="@item.ProductId">Edit</a> |
+                                <a asp-page="ProductDetail" asp-route-prodid="@item.ProductId">Details</a>
+                            </td>
+                            <td>
+                                <button type="submit" asp-page-handler="ApplyDiscount"
+                                    asp-route-prodid="@item.ProductId" asp-route-amtid="5">
+                                    5% Discount
+                                </button>
+                            </td>
+                            <td>
+                                <button asp-page-handler="IncreasePrice"
+                                    class="page-link"
+                                    asp-route-prodid="@item.ProductId" asp-route-amtid="10">
+                                    10% Increase
+                                </button>
+                            </td>
+                            <td>
+                                <button onclick="return
+                        DeleteConfirmationModal(@item.ProductId)"
+                                    asp-page-handler="DeleteProd" asp-route-prodid="@item.ProductId">
+                                    Del
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<!--BOOTSTRAP pop-up confirmation dialog-->
+<div class="modal fade" id="delete-conformation" tabindex="-1" role="dialog" aria-labelledby="deleteconformation">
+    <div class="modal-dialog" style="width:501px !important;margin:0 auto;">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#d9534f;color:white;">
+                <h4 class="modal-title" id="delete-conformation">
+                    Delete Confirmation
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <span>
+                                Are you sure you want to delete?
+                            </span>
+                            <strong id="deletedValueName">
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal"
+                            onclick="closeModal()">
+                        Cancel
+                    </button>
+                    <input type="submit" class="btn btn-danger" value="Delete"
+                           onclick="deleteData()" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+    {
+    <script>
+        $(function () {
+            // write the change event for the dropdown and post the form back tobserver
+            $("#CategoryIdSelected").css({
+                'background-color': '#4499ee', 'color': 'yellow'
+            })
+            $("#CategoryIdSelected").change(function () {
+                //alert('ok')
+                $(this).closest('form').submit();
+            })
+        })
+        function DeleteConfirmation(id) {
+            var ret = confirm("Confirm delete Product with Id:" + id+ "?");
+            if (ret)
+                return true;
+            else
+                return false;
+        }
+        function DeleteConfirmationModal(val) {
+            $('#deletedValueName').text(val);
+            $('#delete-conformation').modal('show');
+            return false;
+        }
+        var closeModal = function () {
+            $('#delete-conformation').modal('hide');
+        }
+        var deleteData = function () {
+            $('#divLoading').show();
+            var id = $('#deletedValueName').text();
+            $.ajax({
+                type: "POST",
+                url: "/ShowProducts?handler=DeleteProd",
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                data: { prodid: id },
+                success: function (result) {
+                    $('#delete-conformation').modal('hide');
+                    $('#frmshowproducts').submit();
+                },
+                error: function () {
+                    $('#delete-conformation').modal('hide');
+                }
+            });
+        }
+    </script>
+}

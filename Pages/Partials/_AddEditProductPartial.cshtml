@@ -1,0 +1,95 @@
+﻿@using ProductsAppRP.Models
+@* @page *@
+@model ProductsAppRP.Models.ModelsVM.AddEditProductVM
+@{
+}
+
+<h2>Edit Product</h2>
+<div class="row">
+    <div class="col-md-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Prod.ProductId" class="control-label"></label>
+            <input asp-for="Prod.ProductId" class="form-control" />
+            <span asp-validation-for="Prod.ProductId" class="textdanger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Prod.ProductName" class="control-label"></label>
+            <input asp-for="Prod.ProductName" class="form-control" />
+            <span asp-validation-for="Prod.ProductName" class="textdanger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Prod.Description" class="control-label"></label>
+            <input asp-for="Prod.Description" class="form-control" />
+            <span asp-validation-for="Prod.Description" class="textdanger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Prod.Price" class="control-label"></label>
+            <input asp-for="Prod.Price" class="form-control" />
+            <span asp-validation-for="Prod.Price" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Prod.StockLevel" class="control-label"></label>
+            <input asp-for="Prod.StockLevel" class="form-control" />
+            <span asp-validation-for="Prod.StockLevel" class="textdanger"></span>
+        </div>
+        <div class="form-group form-check-inline">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="Prod.OnSale" />
+                @Html.DisplayNameFor(model => model.Prod.OnSale)
+            </label>
+        </div>
+        <div class="form-group form-check-inline">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="Prod.Discontinued" />
+                @Html.DisplayNameFor(model => model.Prod.Discontinued)
+            </label>
+        </div>
+        <div class="form-group">
+            @if (Model.Prod.Pcolor == (int)ProductColorEnum.RED)
+            {
+                <input type="radio" checked asp-for="Prod.Pcolor" value="0" />
+
+                @:Red
+            }
+            else
+            {
+                <input type="radio" asp-for="Prod.Pcolor" value="0" />
+
+                @:Red
+            }
+            @if (Model.Prod.Pcolor == (int)ProductColorEnum.GREEN)
+            {
+                <input type="radio" checked asp-for="Prod.Pcolor" value="1" />
+
+                @:Green
+            }
+            else
+            {
+                <input type="radio" asp-for="Prod.Pcolor" value="1" />
+
+                @:Green
+            }
+            @if (Model.Prod.Pcolor == (int)ProductColorEnum.BLUE)
+            {
+                <input type="radio" checked asp-for="Prod.Pcolor" value="2" />
+
+                @:Blue
+            }
+            else
+            {
+                <input type="radio" asp-for="Prod.Pcolor" value="2" />
+
+                @:Blue
+            }
+        </div>
+        <div class="form-group">
+            <select asp-for="Prod.CategoryId" asp-items="Model.CatList"></select>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="@Model.ButtonText" class="btn btn-primary" />
+        </div>
+    </div>
+</div>
+<a asp-page="showproducts">Back to Products</a>
+

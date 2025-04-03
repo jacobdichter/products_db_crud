@@ -1,0 +1,46 @@
+﻿@page
+@model ProductsAppRP.Pages.ProductDetailModel
+@{
+}
+<h2>Product Detail</h2>
+<dl>
+    <dt>Product Name</dt>
+    <dd>@Model.Prod.ProductName</dd>
+    <dt>Description</dt>
+    <dd>@Model.Prod.Description</dd>
+    <dt>Price</dt>
+    <dd>@Model.Prod.Price</dd>
+    <dt>Color</dt>
+    @if (Model.Prod.Pcolor == (int?)ProductsAppRP.Models.ProductColorEnum.RED)
+    {
+        <dd>Red</dd>
+    }
+    @if (Model.Prod.Pcolor == (int?)ProductsAppRP.Models.ProductColorEnum.GREEN)
+    {
+        <dd>Green</dd>
+    }
+    @if (Model.Prod.Pcolor == (int?)ProductsAppRP.Models.ProductColorEnum.BLUE)
+    {
+        <dd>Blue</dd>
+    }
+    <dt>OnSale</dt>
+    @if (Model.Prod.OnSale == true)
+    {
+        <dd>Yes</dd>
+    }
+    else
+    {
+        <dd>No</dd>
+    }
+    <dt>Discontinued</dt>
+    @if (Model.Prod.Discontinued == true)
+    {
+        <dd>Yes</dd>
+    }
+    else
+    {
+        <dd>No</dd>
+    }
+</dl>
+<br />
+<a asp-page="showproducts">Back to Products</a>
